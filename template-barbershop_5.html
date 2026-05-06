@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barbershop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --black: #0A0A08; --dark: #111109; --dark2: #1A1A16; --dark3: #242420;
+  --gold: #C9A84C; --gold-light: #E8C96A; --gold-dim: rgba(201,168,76,0.15);
+  --white: #F5F3EE; --muted: #6A6A60; --mid: #A0A090;
+  --border-dark: rgba(201,168,76,0.12); --border-gold: rgba(201,168,76,0.35);
+  --display: 'Bebas Neue', Impact, sans-serif;
+  --serif: 'Libre Baskerville', Georgia, serif;
+  --body: 'Barlow', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--dark); color: var(--white); font-family: var(--body); font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,8,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-dark); }
+.nav-logo-wrap { display: flex; flex-direction: column; align-items: flex-start; text-decoration: none; }
+.nav-logo { font-family: var(--display); font-size: 1.6rem; letter-spacing: 0.15em; color: var(--white); line-height: 1; }
+.nav-logo-sub { font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-top: 2px; }
+.nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+.nav-links a { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; font-family: var(--body); }
+.nav-links a:hover { color: var(--gold); }
+.nav-book { border: 1px solid var(--border-gold) !important; color: var(--gold) !important; padding: 0.55rem 1.4rem; transition: all 0.3s !important; }
+.nav-book:hover { background: var(--gold) !important; color: var(--black) !important; }
+
+.hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 70px; }
+.hero-stripes { position: absolute; inset: 0; background-image: repeating-linear-gradient(-45deg, transparent, transparent 60px, rgba(201,168,76,0.018) 60px, rgba(201,168,76,0.018) 61px); pointer-events: none; }
+.hero-glow { position: absolute; top: 20%; right: 10%; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%); pointer-events: none; }
+.hero-inner { width: 100%; max-width: 1300px; margin: 0 auto; padding: 4rem 3rem; display: grid; grid-template-columns: 1.1fr 1fr; gap: 6rem; align-items: center; position: relative; z-index: 2; }
+.hero-tag { display: inline-flex; align-items: center; gap: 0.8rem; margin-bottom: 2rem; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); }
+.hero-tag::before, .hero-tag::after { content: ''; width: 24px; height: 1px; background: var(--gold); }
+.hero-title { font-family: var(--display); font-size: clamp(5rem, 9vw, 9rem); letter-spacing: 0.05em; line-height: 0.9; color: var(--white); margin-bottom: 1.5rem; }
+.hero-title .gold { color: var(--gold); }
+.hero-title .outline { -webkit-text-stroke: 1px rgba(245,243,238,0.3); color: transparent; }
+.hero-sub { font-family: var(--serif); font-size: 1rem; font-style: italic; color: var(--mid); line-height: 1.8; max-width: 380px; margin-bottom: 2.5rem; }
+.hero-actions { display: flex; gap: 1rem; }
+.btn-gold { background: var(--gold); color: var(--black); padding: 0.9rem 2.2rem; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block; transition: background 0.3s, transform 0.2s; font-family: var(--body); }
+.btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
+.btn-ghost-gold { border: 1px solid var(--border-gold); color: var(--gold); padding: 0.9rem 2.2rem; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block; transition: all 0.3s; font-family: var(--body); }
+.btn-ghost-gold:hover { background: var(--gold-dim); }
+.hero-card { position: relative; background: var(--dark2); border: 1px solid var(--border-dark); overflow: hidden; }
+.hero-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.hero-photo { aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,243,238,0.1); position: relative; overflow: hidden; }
+.hero-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero-photo-placeholder { background: linear-gradient(160deg, #1A1A16 0%, #0A0A08 100%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,243,238,0.1); }
+.hero-photo-placeholder::after { content: '✂'; position: absolute; font-size: 3rem; color: rgba(201,168,76,0.08); bottom: 2rem; right: 2rem; }
+.hero-stats { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border-dark); }
+.hero-stat { padding: 1.2rem 1.5rem; border-right: 1px solid var(--border-dark); text-align: center; }
+.hero-stat:last-child { border-right: none; }
+.hero-stat-num { font-family: var(--display); font-size: 2rem; letter-spacing: 0.05em; color: var(--gold); line-height: 1; margin-bottom: 0.3rem; }
+.hero-stat-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+.divider { display: flex; align-items: center; gap: 1.5rem; padding: 2rem 3rem; border-top: 1px solid var(--border-dark); border-bottom: 1px solid var(--border-dark); max-width: 1300px; margin: 0 auto; }
+.divider-line { flex: 1; height: 1px; background: var(--border-dark); }
+.divider-text { font-family: var(--display); font-size: 1rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); }
+
+.services { padding: 6rem 3rem; max-width: 1300px; margin: 0 auto; }
+.services-top { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 4rem; }
+.section-kicker { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.section-title { font-family: var(--display); font-size: clamp(3rem, 5vw, 5rem); letter-spacing: 0.06em; line-height: 0.95; color: var(--white); }
+.section-title .gold { color: var(--gold); }
+.section-desc { font-family: var(--serif); font-size: 0.95rem; font-style: italic; color: var(--muted); line-height: 1.9; align-self: end; }
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border-dark); border: 1px solid var(--border-dark); }
+.service-card { background: var(--dark2); padding: 2.5rem; position: relative; transition: background 0.3s; cursor: pointer; }
+.service-card:hover { background: var(--dark3); }
+.service-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--gold); transform: scaleX(0); transition: transform 0.3s; }
+.service-card:hover::after { transform: scaleX(1); }
+.service-num { font-family: var(--display); font-size: 3.5rem; letter-spacing: 0.05em; color: rgba(201,168,76,0.1); line-height: 1; margin-bottom: 1rem; transition: color 0.3s; }
+.service-card:hover .service-num { color: rgba(201,168,76,0.2); }
+.service-name { font-family: var(--display); font-size: 1.4rem; letter-spacing: 0.1em; color: var(--white); margin-bottom: 0.8rem; }
+.service-desc { font-size: 0.82rem; font-weight: 300; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+.service-price-row { display: flex; justify-content: space-between; align-items: center; }
+.service-price { font-family: var(--display); font-size: 1.5rem; letter-spacing: 0.05em; color: var(--gold); }
+.service-duration { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+.team { padding: 6rem 3rem; background: var(--dark2); border-top: 1px solid var(--border-dark); border-bottom: 1px solid var(--border-dark); }
+.team-inner { max-width: 1300px; margin: 0 auto; }
+.team-header { text-align: center; margin-bottom: 4rem; }
+.team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+.barber-card { text-align: center; }
+.barber-photo { aspect-ratio: 3/4; margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(245,243,238,0.1); position: relative; overflow: hidden; border: 1px solid var(--border-dark); transition: border-color 0.3s; }
+.barber-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.barber-card:hover .barber-photo { border-color: var(--border-gold); }
+.barber-photo::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0; transition: opacity 0.3s; }
+.barber-card:hover .barber-photo::after { opacity: 1; }
+.barber-name { font-family: var(--display); font-size: 1.3rem; letter-spacing: 0.1em; color: var(--white); margin-bottom: 0.3rem; }
+.barber-title { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+.barber-exp { font-size: 0.75rem; color: var(--muted); }
+
+/* ── BOOKING SECTION WITH CONTACTS ── */
+.booking { background: var(--black); padding: 8rem 3rem; position: relative; overflow: hidden; }
+.booking::before { content: ''; position: absolute; top: -200px; left: -200px; width: 600px; height: 600px; border-radius: 50%; border: 1px solid var(--border-dark); pointer-events: none; }
+.booking::after { content: ''; position: absolute; bottom: -200px; right: -200px; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.06); pointer-events: none; }
+.booking-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 2; }
+.booking-header { text-align: center; margin-bottom: 4rem; }
+.booking-kicker { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+.booking-title { font-family: var(--display); font-size: clamp(3rem, 6vw, 5.5rem); letter-spacing: 0.06em; line-height: 0.95; color: var(--white); margin-bottom: 1rem; }
+.booking-title .gold { color: var(--gold); }
+.booking-sub { font-family: var(--serif); font-size: 1rem; font-style: italic; color: var(--muted); line-height: 1.8; }
+.booking-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.booking-input { background: rgba(201,168,76,0.05); border: 1px solid var(--border-dark); color: var(--white); padding: 1rem 1.5rem; font-size: 0.85rem; font-family: var(--body); outline: none; transition: border-color 0.3s; width: 100%; }
+.booking-input::placeholder { color: var(--muted); }
+.booking-input:focus { border-color: var(--border-gold); }
+.booking-select { background: rgba(201,168,76,0.05); border: 1px solid var(--border-dark); color: var(--white); padding: 1rem 1.5rem; font-size: 0.85rem; font-family: var(--body); outline: none; transition: border-color 0.3s; width: 100%; appearance: none; cursor: pointer; }
+.booking-select option { background: var(--dark2); color: var(--white); }
+.booking-select:focus { border-color: var(--border-gold); }
+.booking-textarea { background: rgba(201,168,76,0.05); border: 1px solid var(--border-dark); color: var(--white); padding: 1rem 1.5rem; font-size: 0.85rem; font-family: var(--body); outline: none; transition: border-color 0.3s; width: 100%; resize: vertical; grid-column: span 2; min-height: 80px; }
+.booking-textarea::placeholder { color: var(--muted); }
+.booking-textarea:focus { border-color: var(--border-gold); }
+.booking-submit { grid-column: span 2; background: var(--gold); color: var(--black); padding: 1.1rem 3rem; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; border: none; cursor: pointer; font-family: var(--body); transition: background 0.3s; width: 100%; }
+.booking-submit:hover { background: var(--gold-light); }
+.booking-note { text-align: center; font-size: 0.72rem; color: var(--muted); margin-top: 1rem; }
+.booking-success { display: none; text-align: center; background: rgba(201,168,76,0.08); border: 1px solid var(--border-gold); color: var(--white); padding: 2rem; margin-top: 2rem; font-family: var(--serif); font-style: italic; }
+.booking-phone-alt { text-align: center; margin-top: 2.5rem; font-size: 0.75rem; letter-spacing: 0.1em; color: var(--muted); }
+.booking-phone-alt a { color: var(--gold); text-decoration: none; transition: color 0.3s; }
+.booking-phone-alt a:hover { color: var(--white); }
+.booking-contacts { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+.booking-contact-card { background: rgba(201,168,76,0.05); border: 1px solid var(--border-dark); padding: 2rem 2.5rem; text-align: center; min-width: 200px; transition: border-color 0.3s; }
+.booking-contact-card:hover { border-color: var(--border-gold); }
+.booking-contact-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+.booking-contact-label { font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+.booking-contact-value { font-size: 0.9rem; color: var(--white); text-decoration: none; display: block; line-height: 1.6; transition: color 0.3s; }
+.booking-contact-value:hover { color: var(--gold); }
+.booking-services-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.6rem; max-width: 800px; margin: 0 auto; }
+.booking-service-row { display: flex; justify-content: space-between; align-items: center; background: rgba(201,168,76,0.03); border: 1px solid var(--border-dark); padding: 0.8rem 1.2rem; }
+.booking-service-name { font-size: 0.82rem; color: var(--white); }
+.booking-service-meta { font-size: 0.75rem; color: var(--gold); }
+
+.gallery { padding: 6rem 3rem; max-width: 1300px; margin: 0 auto; }
+.gallery-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; }
+.gallery-grid { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: 200px 200px; gap: 8px; }
+.gallery-item { overflow: hidden; background: var(--dark2); cursor: pointer; position: relative; }
+.gallery-item:first-child { grid-column: span 2; grid-row: span 2; }
+.gallery-item:nth-child(4) { grid-column: span 2; }
+.gallery-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; letter-spacing: 0.15em; color: rgba(245,243,238,0.08); text-transform: uppercase; transition: transform 0.5s; }
+.gallery-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.gph1 { background: linear-gradient(135deg, #1A1A16 0%, #111109 100%); }
+.gph2 { background: linear-gradient(145deg, #242420 0%, #1A1A16 100%); }
+.gph3 { background: linear-gradient(135deg, #111109 0%, #242420 100%); }
+.gph4 { background: linear-gradient(145deg, #1A1A16 0%, #0A0A08 100%); }
+.gph5 { background: linear-gradient(135deg, #242420 0%, #111109 100%); }
+.gph6 { background: linear-gradient(145deg, #111109 0%, #1A1A16 100%); }
+.gph7 { background: linear-gradient(135deg, #1A1A16 0%, #242420 100%); }
+.gallery-item:hover .gallery-ph, .gallery-item:hover .gallery-ph img { transform: scale(1.06); }
+
+footer { background: var(--black); border-top: 1px solid var(--border-dark); padding: 4rem 3rem 2rem; }
+.footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem; padding-bottom: 3rem; border-bottom: 1px solid var(--border-dark); }
+.footer-logo-big { font-family: var(--display); font-size: 2rem; letter-spacing: 0.15em; color: var(--white); margin-bottom: 0.3rem; }
+.footer-logo-sub { font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; }
+.footer-brand-text { font-size: 0.82rem; font-weight: 300; color: var(--muted); line-height: 1.7; }
+.footer-col-title { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-col a { font-size: 0.82rem; font-weight: 300; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+.footer-col a:hover { color: var(--white); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+.footer-copy { font-size: 0.65rem; color: rgba(245,243,238,0.2); }
+.footer-socials { display: flex; gap: 1.5rem; }
+.footer-social { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(245,243,238,0.25); text-decoration: none; transition: color 0.3s; }
+.footer-social:hover { color: var(--gold); }
+
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.5rem; }
+  .hero-inner { grid-template-columns: 1fr; gap: 3rem; padding: 3rem 1.5rem; }
+  .services { padding: 4rem 1.5rem; }
+  .services-top { grid-template-columns: 1fr; gap: 2rem; }
+  .services-grid { grid-template-columns: 1fr; }
+  .team { padding: 4rem 1.5rem; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+  .booking { padding: 4rem 1.5rem; }
+  .booking-form { grid-template-columns: 1fr; }
+  .booking-textarea, .booking-submit { grid-column: span 1; }
+  .gallery { padding: 4rem 1.5rem; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+  .gallery-item:first-child { grid-column: span 2; }
+  .gallery-item:nth-child(4) { grid-column: span 1; }
+  footer { padding: 3rem 1.5rem 1.5rem; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo-wrap">
+    <span class="nav-logo" id="nav-name"></span>
+    <span class="nav-logo-sub" id="nav-sub"></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#booking" class="nav-book">Book now</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-stripes"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="reveal">
+      <div class="hero-tag" id="hero-tag"></div>
+      <h1 class="hero-title" id="hero-title"></h1>
+      <p class="hero-sub" id="hero-sub"></p>
+      <div class="hero-actions">
+        <a href="#booking" class="btn-gold">Book now</a>
+        <a href="#services" class="btn-ghost-gold">Our services</a>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="hero-card">
+        <div class="hero-photo" id="hero-photo"></div>
+        <div class="hero-stats" id="hero-stats"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-text" id="divider-text"></div>
+  <div class="divider-line"></div>
+</div>
+
+<section class="services" id="services">
+  <div class="services-top reveal">
+    <div>
+      <p class="section-kicker">Our services</p>
+      <h2 class="section-title" id="services-title"></h2>
+    </div>
+    <p class="section-desc" id="services-desc"></p>
+  </div>
+  <div class="services-grid" id="services-grid"></div>
+</section>
+
+<section class="team" id="team">
+  <div class="team-inner">
+    <div class="team-header reveal">
+      <p class="section-kicker">Meet the team</p>
+      <h2 class="section-title" id="team-title"></h2>
+    </div>
+    <div class="team-grid" id="team-grid"></div>
+  </div>
+</section>
+
+<section class="booking" id="booking">
+  <div class="booking-inner">
+    <div class="booking-header reveal">
+      <p class="booking-kicker">Appointments</p>
+      <h2 class="booking-title" id="booking-title"></h2>
+      <p class="booking-sub" id="booking-sub"></p>
+    </div>
+
+    <!-- BOOKING VIA CONTACT -->
+    <div class="booking-contacts reveal" id="booking-contacts"></div>
+    <div class="booking-services-list reveal" id="booking-services-list"></div>
+
+    <p class="booking-note reveal" id="booking-note"></p>
+    <div class="booking-success" id="booking-success">
+      ✓ &nbsp; Appointment request sent! We'll confirm your booking via email within a few hours.
+    </div>
+    <p class="booking-phone-alt reveal" id="booking-phone-alt"></p>
+  </div>
+</section>
+
+<section class="gallery" id="gallery">
+  <div class="gallery-header reveal">
+    <div>
+      <p class="section-kicker">Our work</p>
+      <h2 class="section-title" style="font-size: clamp(2rem,3.5vw,3.5rem);">GALLERY</h2>
+    </div>
+    <a id="gallery-link" href="#" class="btn-ghost-gold" style="font-size:0.7rem;">View Instagram</a>
+  </div>
+  <div class="gallery-grid" id="gallery-grid"></div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo-big" id="footer-name"></div>
+      <div class="footer-logo-sub" id="footer-sub"></div>
+      <p class="footer-brand-text" id="footer-desc"></p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Services</div>
+      <ul id="footer-services"></ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Hours</div>
+      <ul id="footer-hours"></ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Address</div>
+      <ul id="footer-address"></ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy" id="footer-copy"></span>
+    <div class="footer-socials" id="footer-socials"></div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   CONFIG SECTION — EDIT ONLY HERE
+   ============================================================ */
+const CONFIG = {
+
+  /* --- GENERAL INFO --- */
+  name:        "King's Cut",
+  subtitle:    "Barbershop · Est. 2015",
+  year:        2025,
+  description: "A classic barbershop in the heart of the city. Where every visit is an experience, not just a haircut.",
+
+  /* --- HERO --- */
+  heroTag:    "London · Classic Barbershop",
+  heroTitle:  ["THE", "KING'S", "CUT"],  // 3 lines: normal | gold | outline
+  heroSub:    "Where the perfect cut meets the ritual of another era. Tradition, precision and an atmosphere that respects the modern man.",
+  heroImage:  "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80&fit=crop&crop=top",   // e.g. "images/hero.jpg" — leave empty for placeholder
+  heroStats: [
+    { number: "10+", label: "Years open"  },
+    { number: "4K+", label: "Clients"     },
+  ],
+
+  /* --- DIVIDER --- */
+  dividerText: "✦   Tradition   ✦   Precision   ✦   Style   ✦",
+
+  /* --- SERVICES --- */
+  servicesTitle: ["WHAT WE", "DO"],   // line 1 normal | line 2 gold
+  servicesDesc:  "Every service is delivered with the rigour of those who learned the craft the right way — no shortcuts, no compromise on quality.",
+  services: [
+    { name: "Classic Cut",         desc: "Full scissor and clipper cut. Includes wash, finish and premium product styling.",                         price: "£25", duration: "45 min" },
+    { name: "Full Beard",          desc: "Shape and trim with hot straight razor. Hot towel, beard oil and finishing wax included.",                 price: "£20", duration: "30 min" },
+    { name: "Royal Combo",         desc: "Classic cut + full beard + facial cleanse treatment. The complete house experience.",                      price: "£40", duration: "75 min" },
+    { name: "Fade & Design",       desc: "Detailed fade with personalised design. For those who want a cut with their own identity.",                price: "£30", duration: "50 min" },
+    { name: "Hair Treatment",      desc: "Deep hydration with professional products. Ideal for dry, damaged or dull hair.",                         price: "£28", duration: "40 min" },
+    { name: "Junior (under 12)",   desc: "Haircut for the little ones in a relaxed, welcoming environment. Wash included.",                         price: "£15", duration: "30 min" },
+  ],
+
+  /* --- TEAM --- */
+  teamTitle: ["THE", "TEAM"],   // line 1 normal | line 2 gold
+  team: [
+    { name: "Richard Stone",  title: "Master Barber · Founder",  experience: "15 years experience", photo: "https://images.unsplash.com/photo-1618077360395-f3068be8e001?w=400&q=80" },
+    { name: "Michael Davis",  title: "Senior Barber",            experience: "8 years experience",  photo: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=400&q=80" },
+    { name: "James Porter",   title: "Barber · Fade Specialist", experience: "5 years experience",  photo: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80" },
+    { name: "Andre Santos",   title: "Barber · Design Expert",   experience: "4 years experience",  photo: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&q=80" },
+  ],
+
+  /* --- BOOKING SECTION --- */
+  bookingTitle: ["BOOK YOUR", "APPOINTMENT"],
+  bookingSub:   "Reserve your spot online and we'll confirm within a few hours.",
+  bookingNote:  "We'll send a confirmation to your email. Free cancellation up to 24 hours before.",
+  bookingPhone: "+44 20 0000 0000",  // shown as fallback below the form
+
+  /* --- FORMSPREE --- */
+  // 1. Create a free account at formspree.io
+  // 2. Create a new form and copy your unique ID
+  // 3. Paste it below (e.g. "xbjnaklp")
+  formspreeId: "YOUR_FORMSPREE_ID",
+
+  /* --- GALLERY (7 photos) --- */
+  galleryPhotos: ["https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80","https://images.unsplash.com/photo-1578496480157-697fc14d2e55?w=600&q=80","https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=80","https://images.unsplash.com/photo-1596728325488-58c87691e9af?w=600&q=80","https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600&q=80","https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80","https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&q=80"],  // e.g. "images/cut1.jpg"
+  galleryInstagram: "https://instagram.com/",
+
+  /* --- SOCIAL LINKS --- */
+  socials: [
+    { name: "Instagram", url: "https://instagram.com/" },
+    { name: "Facebook",  url: "https://facebook.com/"  },
+    { name: "TikTok",    url: "https://tiktok.com/"    },
+  ],
+
+  /* --- FOOTER --- */
+  footerHours:   ["Mon–Fri: 10am–8pm", "Saturday: 9am–6pm", "Sunday: Closed"],
+  footerAddress: ["45 King Street", "London W1B 1AA", "+44 20 0000 0000"],
+};
+/* ============================================================
+   END OF CONFIG SECTION
+   ============================================================ */
+
+
+/* --- Apply CONFIG --- */
+document.getElementById('nav-name').textContent = CONFIG.name;
+document.getElementById('nav-sub').textContent  = CONFIG.subtitle;
+document.getElementById('hero-tag').textContent = CONFIG.heroTag;
+document.getElementById('hero-sub').textContent = CONFIG.heroSub;
+
+document.getElementById('hero-title').innerHTML =
+  `${CONFIG.heroTitle[0]}<br><span class="gold">${CONFIG.heroTitle[1]}</span><br><span class="outline">${CONFIG.heroTitle[2]}</span>`;
+
+const heroPhoto = document.getElementById('hero-photo');
+heroPhoto.innerHTML = CONFIG.heroImage
+  ? `<img src="${CONFIG.heroImage}" alt="${CONFIG.name}">`
+  : `<div class="hero-photo-placeholder"></div>`;
+
+document.getElementById('hero-stats').innerHTML = CONFIG.heroStats.map(s => `
+  <div class="hero-stat">
+    <div class="hero-stat-num">${s.number}</div>
+    <div class="hero-stat-label">${s.label}</div>
+  </div>`).join('');
+
+document.getElementById('divider-text').textContent = CONFIG.dividerText;
+
+document.getElementById('services-title').innerHTML =
+  `${CONFIG.servicesTitle[0]}<br><span class="gold">${CONFIG.servicesTitle[1]}</span>`;
+document.getElementById('services-desc').textContent = CONFIG.servicesDesc;
+
+document.getElementById('services-grid').innerHTML = CONFIG.services.map((s, i) => `
+  <div class="service-card reveal">
+    <div class="service-num">0${i+1}</div>
+    <div class="service-name">${s.name}</div>
+    <p class="service-desc">${s.desc}</p>
+    <div class="service-price-row">
+      <div class="service-price">${s.price}</div>
+      <div class="service-duration">${s.duration}</div>
+    </div>
+  </div>`).join('');
+
+document.getElementById('team-title').innerHTML =
+  `${CONFIG.teamTitle[0]}<br><span class="gold">${CONFIG.teamTitle[1]}</span>`;
+
+const phClasses = ['gph1','gph2','gph3','gph4'];
+document.getElementById('team-grid').innerHTML = CONFIG.team.map((b, i) => `
+  <div class="barber-card reveal">
+    <div class="barber-photo ${phClasses[i]}">
+      ${b.photo ? `<img src="${b.photo}" alt="${b.name}">` : b.name}
+    </div>
+    <div class="barber-name">${b.name}</div>
+    <div class="barber-title">${b.title}</div>
+    <div class="barber-exp">${b.experience}</div>
+  </div>`).join('');
+
+// Booking section
+document.getElementById('booking-title').innerHTML =
+  `${CONFIG.bookingTitle[0]}<br><span class="gold">${CONFIG.bookingTitle[1]}</span>`;
+document.getElementById('booking-sub').textContent  = CONFIG.bookingSub;
+document.getElementById('booking-note').textContent = CONFIG.bookingNote;
+document.getElementById('booking-phone-alt').innerHTML =
+  `Prefer to call? &nbsp;<a href="tel:${CONFIG.bookingPhone.replace(/\s/g,'')}">${CONFIG.bookingPhone}</a>`;
+
+// Contact cards
+const bookingContacts = [
+  { icon: '📞', label: 'Call to book', value: CONFIG.bookingPhone, href: 'tel:' + CONFIG.bookingPhone.replace(/\s/g,'') },
+  { icon: '💬', label: 'WhatsApp us', value: 'Send a message', href: 'https://wa.me/' + CONFIG.bookingPhone.replace(/\D/g,'') },
+  { icon: '📍', label: 'Walk in', value: CONFIG.footerAddress.join(', '), href: `https://maps.google.com/?q=${encodeURIComponent(CONFIG.footerAddress.join(', '))}` },
+];
+document.getElementById('booking-contacts').innerHTML = bookingContacts.map(c => `
+  <div class="booking-contact-card">
+    <div class="booking-contact-icon">${c.icon}</div>
+    <div class="booking-contact-label">${c.label}</div>
+    <a class="booking-contact-value" href="${c.href}">${c.value}</a>
+  </div>`).join('');
+
+// Services list
+document.getElementById('booking-services-list').innerHTML = CONFIG.services.map(s => `
+  <div class="booking-service-row">
+    <span class="booking-service-name">${s.name}</span>
+    <span class="booking-service-meta">${s.price} · ${s.duration}</span>
+  </div>`).join('');
+
+// Gallery
+const gphClasses = ['gph1','gph2','gph3','gph4','gph5','gph6','gph7'];
+document.getElementById('gallery-grid').innerHTML = CONFIG.galleryPhotos.map((photo, i) => `
+  <div class="gallery-item reveal">
+    <div class="gallery-ph ${gphClasses[i]}">
+      ${photo ? `<img src="${photo}" alt="Gallery ${i+1}">` : `Photo ${String(i+1).padStart(2,'0')}`}
+    </div>
+  </div>`).join('');
+document.getElementById('gallery-link').href = CONFIG.galleryInstagram;
+
+// Footer
+document.getElementById('footer-name').textContent = CONFIG.name;
+document.getElementById('footer-sub').textContent  = CONFIG.subtitle;
+document.getElementById('footer-desc').textContent = CONFIG.description;
+document.getElementById('footer-copy').textContent =
+  `© ${CONFIG.year} ${CONFIG.name} · Template by [Your Brand]`;
+document.getElementById('footer-services').innerHTML = CONFIG.services.slice(0,4).map(s =>
+  `<li><a href="#services">${s.name}</a></li>`).join('');
+document.getElementById('footer-hours').innerHTML = CONFIG.footerHours.map(h =>
+  `<li><span style="color:rgba(255,255,255,0.4)">${h}</span></li>`).join('');
+document.getElementById('footer-address').innerHTML = CONFIG.footerAddress.map((a,i) => {
+  if(i===2) return `<li><a href="tel:${a.replace(/\s/g,'')}" style="color:rgba(255,255,255,0.4);text-decoration:none;">${a}</a></li>`;
+  return `<li><span style="color:rgba(255,255,255,0.4)">${a}</span></li>`;
+}).join('');
+document.getElementById('footer-socials').innerHTML = CONFIG.socials.map(s =>
+  `<a href="${s.url}" class="footer-social" target="_blank">${s.name}</a>`).join('');
+
+// Scroll reveal
+const obs = new IntersectionObserver(e => {
+  e.forEach(el => { if (el.isIntersecting) el.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
